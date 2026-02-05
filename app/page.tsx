@@ -8,18 +8,21 @@ import { ServicesPanel } from "./components/ServicesPanel";
 import { WorkPanel } from "./components/WorkPanel";
 import { ContactPanel } from "./components/ContactPanel";
 import { useCustomCursor } from "../lib/hooks/useCustomCursor";
+import { CMSProvider } from "../lib/cms/CMSContext";
 
 export default function Home() {
   useCustomCursor();
 
   return (
-    <main className="min-h-screen bg-[#0A0A0A]">
-      <Navigation />
-      <HeroPanel />
-      <AboutPanel />
-      <ServicesPanel />
-      <WorkPanel />
-      <ContactPanel />
-    </main>
+    <CMSProvider>
+      <main className="min-h-screen bg-[#0A0A0A]">
+        <Navigation />
+        <HeroPanel />
+        <AboutPanel />
+        <ServicesPanel />
+        <WorkPanel />
+        <ContactPanel />
+      </main>
+    </CMSProvider>
   );
 }

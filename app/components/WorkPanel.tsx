@@ -3,37 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-
-const projects = [
-  {
-    name: "MINTAIR",
-    category: "Web3 Platform Launch",
-    description: "Promotional reels and launch visuals for NFT infrastructure platform.",
-    color: "#00D4FF",
-    bgGradient: "from-[#00D4FF]/20 to-transparent"
-  },
-  {
-    name: "REEF CHAIN",
-    category: "Blockchain Marketing",
-    description: "Community content and exchange-style marketing for Layer 1 blockchain.",
-    color: "#7928CA",
-    bgGradient: "from-[#7928CA]/20 to-transparent"
-  },
-  {
-    name: "KOKOPAI",
-    category: "AI/Art Project",
-    description: "Creative direction and video content for AI art platform.",
-    color: "#FF0080",
-    bgGradient: "from-[#FF0080]/20 to-transparent"
-  },
-  {
-    name: "THE CANDLESTICK TRADES",
-    category: "Trading Education",
-    description: "Technical analysis content and trading education visuals.",
-    color: "#FFD700",
-    bgGradient: "from-[#FFD700]/20 to-transparent"
-  }
-];
+import { useCMS } from "../../lib/cms/CMSContext";
 
 export function WorkPanel() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -41,6 +11,8 @@ export function WorkPanel() {
     target: containerRef,
     offset: ["start start", "end end"]
   });
+  const { data } = useCMS();
+  const projects = data.projects;
 
   return (
     <section id="work" className="py-32 bg-[#0A0A0A]" ref={containerRef}>
@@ -71,7 +43,7 @@ export function WorkPanel() {
           <div className="lg:pl-8 space-y-32">
             {projects.map((project, index) => (
               <motion.div
-                key={index}
+                key={project.id}
                 className="relative group"
                 initial={{ opacity: 0, y: 100 }}
                 whileInView={{ opacity: 1, y: 0 }}

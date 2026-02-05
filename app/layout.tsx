@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "../lib/cms/AuthContext";
 
 export const metadata: Metadata = {
   title: "SAKLAIN STUDIOS | Web3 Content Creator & Creative Producer",
@@ -24,10 +25,12 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <div className="gradient-mesh" />
-        <div className="noise-overlay" />
-        <div className="custom-cursor" id="cursor" />
-        {children}
+        <AuthProvider>
+          <div className="gradient-mesh" />
+          <div className="noise-overlay" />
+          <div className="custom-cursor" id="cursor" />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

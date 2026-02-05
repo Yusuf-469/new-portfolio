@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, MapPin } from "lucide-react";
+import { Menu, X, MapPin, Settings } from "lucide-react";
+import { useAuth } from "../../lib/cms/AuthContext";
 
 const navLinks = [
   { href: "#work", label: "Work" },
@@ -15,6 +16,7 @@ const navLinks = [
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,6 +59,17 @@ export function Navigation() {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#00D4FF] transition-all duration-300 group-hover:w-full" />
                 </a>
               ))}
+              {isAuthenticated && (
+                <a
+                  href="/admin"
+                  className="text-sm font-medium text-[#00D44FF] hover:text-[#00D4FF] transition-colors duration-300 relative group flex items-center gap-1"
+                  data-cursor-hover
+                >
+                  <Settings size={14} />
+                  CMS
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#00D4FF] transition-all duration-300 group-hover:w-full" />
+                </a>
+              )}
             </div>
 
             <div className="flex items-center gap-4 border-l border-white/10 pl-6">
@@ -120,6 +133,19 @@ export function Navigation() {
                   {link.label}
                 </motion.a>
               ))}
+              {isAuthenticated && (
+                <motion.a
+                  href="/admin"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: navLinks.length * 0.1 }}
+                  className="display-text text-4xl font-bold text-[#00D4FF] transition-colors"
+                  data-cursor-hover
+                >
+                  CMS
+                </motion.a>
+              )}
             </div>
 
             <div className="p-6 border-t border-white/10">

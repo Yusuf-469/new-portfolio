@@ -4,24 +4,13 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Users, Award, Clock } from "lucide-react";
-
-const expertiseItems = [
-  "3D Animation & Motion Design",
-  "AI Video Generation & Editing",
-  "Crypto Marketing & Community",
-  "Technical Analysis (TradingView)",
-  "Event Coverage & Livestream",
-];
-
-const stats = [
-  { value: "50+", label: "Projects" },
-  { value: "10+", label: "Web3 Brands" },
-  { value: "3+", label: "Years Experience" },
-  { value: "Dubai", label: "Base" },
-];
+import { useCMS } from "../../lib/cms/CMSContext";
 
 export function AboutPanel() {
   const [expandedPill, setExpandedPill] = useState<number | null>(null);
+  const { data } = useCMS();
+  const skills = data.skills;
+  const about = data.about;
 
   return (
     <section id="about" className="py-32 bg-[#0A0A0A]">
@@ -56,7 +45,7 @@ export function AboutPanel() {
               viewport={{ once: true }}
             >
               <MapPin size={16} className="text-[#00D4FF]" />
-              <span className="text-sm font-medium">Dubai, UAE</span>
+              <span className="text-sm font-medium">{about.location}</span>
             </motion.div>
           </div>
 
@@ -89,17 +78,14 @@ export function AboutPanel() {
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              I'm a Web3 content creator and creative producer with hands-on experience
-              working with blockchain and crypto brands through DappRush Studios.
-              Specialized in 3D animations, AI-generated videos, and short-form digital
-              content tailored for crypto marketing, community engagement, and livestream promotion.
+              {about.bio}
             </motion.p>
 
             {/* Expertise Pills */}
             <div className="space-y-3 mb-12">
-              {expertiseItems.map((item, index) => (
+              {skills.map((skill, index) => (
                 <motion.div
-                  key={index}
+                  key={skill.id}
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
@@ -111,7 +97,7 @@ export function AboutPanel() {
                     data-cursor-hover
                   >
                     <span className="font-medium group-hover:text-[#00D4FF] transition-colors">
-                      {item}
+                      {skill.name}
                     </span>
                     <span className={`text-[#00D4FF] transition-transform duration-300 ${
                       expandedPill === index ? "rotate-180" : ""
@@ -129,7 +115,7 @@ export function AboutPanel() {
                       className="overflow-hidden"
                     >
                       <p className="px-5 py-4 text-gray-500 text-sm">
-                        Specialized expertise in {item.toLowerCase()}, delivering
+                        Specialized expertise in {skill.name.toLowerCase()}, delivering
                         premium quality content for Web3 and blockchain brands.
                       </p>
                     </motion.div>
@@ -140,19 +126,46 @@ export function AboutPanel() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <p className="display-text text-3xl text-[#00D4FF] mb-1">{stat.value}</p>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
-                </motion.div>
-              ))}
+              <motion.div
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <p className="display-text text-3xl text-[#00D4FF] mb-1">{about.projectsCompleted}</p>
+                <p className="text-sm text-gray-500">Projects</p>
+              </motion.div>
+              <motion.div
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+                viewport={{ once: true }}
+              >
+                <p className="display-text text-3xl text-[#00D4FF] mb-1">{about.web3Brands}</p>
+                <p className="text-sm text-gray-500">Web3 Brands</p>
+              </motion.div>
+              <motion.div
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
+                viewport={{ once: true }}
+              >
+                <p className="display-text text-3xl text-[#00D4FF] mb-1">{about.yearsExperience}</p>
+                <p className="text-sm text-gray-500">Years Exp</p>
+              </motion.div>
+              <motion.div
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.1 }}
+                viewport={{ once: true }}
+              >
+                <p className="display-text text-3xl text-[#00D4FF] mb-1">Dubai</p>
+                <p className="text-sm text-gray-500">Base</p>
+              </motion.div>
             </div>
           </div>
         </div>
