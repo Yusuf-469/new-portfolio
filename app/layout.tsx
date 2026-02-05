@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "../lib/cms/AuthContext";
+import { CMSProvider } from "../lib/cms/CMSContext";
 
 export const metadata: Metadata = {
   title: "SAKLAIN STUDIOS | Web3 Content Creator & Creative Producer",
@@ -26,10 +27,12 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <AuthProvider>
-          <div className="gradient-mesh" />
-          <div className="noise-overlay" />
-          <div className="custom-cursor" id="cursor" />
-          {children}
+          <CMSProvider>
+            <div className="gradient-mesh" />
+            <div className="noise-overlay" />
+            <div className="custom-cursor" id="cursor" />
+            {children}
+          </CMSProvider>
         </AuthProvider>
       </body>
     </html>
