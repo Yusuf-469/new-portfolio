@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../lib/cms/AuthContext";
 import { useCMS } from "../../lib/cms/CMSContext";
 import { useRouter } from "next/navigation";
@@ -11,13 +11,13 @@ import {
   LogOut, 
   Briefcase, 
   Award,
-  ChevronDown,
-  ChevronUp,
-  X
 } from "lucide-react";
 import { Project, Skill } from "../../lib/cms/types";
 
 type Tab = "projects" | "skills" | "about";
+
+// Force dynamic rendering to avoid SSR issues with localStorage
+export const dynamic = 'force-dynamic';
 
 export default function AdminPage() {
   const { isAuthenticated, logout, isLoading: authLoading } = useAuth();
