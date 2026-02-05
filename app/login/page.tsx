@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../lib/cms/AuthContext";
 import { Lock, User, ArrowRight } from "lucide-react";
@@ -10,8 +10,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    // If already authenticated, redirect to admin
+    if (isAuthenticated) {
+      router.push("/admin");
+    }
+  }, [isAuthenticated, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,13 +37,18 @@ export default function LoginPage() {
     setIsLoading(false);
   };
 
+  // Don't render anything while checking auth (redirect will happen)
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-12">
           <h1 className="display-text text-4xl font-bold text-white mb-2">S-S.</h1>
-          <p className="text-gray-500">Portfolio CMS</p>
+          <p className="text-gray-500">CMS Login</p>
         </div>
 
         {/* Login Form */}
