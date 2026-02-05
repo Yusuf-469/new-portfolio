@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
-import { PortfolioData, Project, Skill } from "../cms/types";
+import { PortfolioData, Project, Skill, DEFAULT_PORTFOLIO_DATA } from "../cms/types";
 import { 
   getPortfolioData, 
   savePortfolioData, 
@@ -30,17 +30,19 @@ interface CMSContextType {
 const CMSContext = createContext<CMSContextType | undefined>(undefined);
 
 export function CMSProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<PortfolioData | null>(null);
+  const [data, setData] = useState<PortfolioData>(DEFAULT_PORTFOLIO_DATA);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    setData(getPortfolioData());
+    setIsLoading(false);
+  }, []);
 
   const refreshData = useCallback(() => {
     setData(getPortfolioData());
   }, []);
-
-  useEffect(() => {
-    refreshData();
-    setIsLoading(false);
-  }, [refreshData]);
 
   const addProject = (project: Omit<Project, "id" | "createdAt">) => {
     storageAddProject(project);
@@ -77,11 +79,25 @@ export function CMSProvider({ children }: { children: ReactNode }) {
     refreshData();
   };
 
-  if (!data) {
+  // Don't render provider content until mounted on client
+  if (!isMounted) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-        <div className="text-white">Loading...</div>
-      </div>
+      <CMSContext.Provider 
+        value={{ 
+          data: DEFAULT_PORTFOLIO_DATA, 
+          isLoading: true,
+          addProject: () => {},
+          updateProject: () => {},
+          deleteProject: () => {},
+          addSkill: () => {},
+          updateSkill: () => {},
+          deleteSkill: () => {},
+          updateAbout: () => {},
+          refreshData: () => {},
+        }}
+      >
+        {children}
+      </CMSContext.Provider>
     );
   }
 
