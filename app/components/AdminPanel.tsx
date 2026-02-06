@@ -16,10 +16,11 @@ import {
   ArrowLeft,
   Lock,
   User,
+  Palette,
 } from "lucide-react";
-import { Project, Skill } from "../../lib/cms/types";
+import { Project, Skill, MyWork } from "../../lib/cms/types";
 
-type Tab = "projects" | "skills" | "about";
+type Tab = "projects" | "skills" | "about" | "myworks";
 
 interface AdminPanelProps {
   isOpen: boolean;
@@ -28,12 +29,14 @@ interface AdminPanelProps {
 
 export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
   const { isAuthenticated, login, logout, isLoading: authLoading } = useAuth();
-  const { data, addProject, updateProject, deleteProject, addSkill, updateSkill, deleteSkill, updateAbout } = useCMS();
+  const { data, addProject, updateProject, deleteProject, addSkill, updateSkill, deleteSkill, updateAbout, addMyWork, updateMyWork, deleteMyWork } = useCMS();
   const [activeTab, setActiveTab] = useState<Tab>("projects");
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isAddingSkill, setIsAddingSkill] = useState(false);
+  const [isAddingMyWork, setIsAddingMyWork] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
+  const [editingMyWork, setEditingMyWork] = useState<MyWork | null>(null);
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const [loginError, setLoginError] = useState("");
 
@@ -58,6 +61,13 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     yearsExperience: data.about.yearsExperience,
     projectsCompleted: data.about.projectsCompleted,
     web3Brands: data.about.web3Brands,
+  });
+
+  const [myWorkForm, setMyWorkForm] = useState({
+    title: "",
+    description: "",
+    imageUrl: "",
+    type: "framing" as "framing" | "moving",
   });
 
   if (!isOpen) {
@@ -119,6 +129,31 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const handleUpdateAbout = () => {
     updateAbout(aboutForm);
+  };
+
+  const handleAddMyWork = () => {
+    if (myWorkForm.title && myWorkForm.imageUrl) {
+      addMyWork({
+        title: myWorkForm.title,
+        description: myWorkForm.description,
+        imageUrl: myWorkForm.imageUrl,
+        type: myWorkForm.type,
+      });
+      setMyWorkForm({
+        title: "",
+        description: "",
+        imageUrl: "",
+        type: "framing",
+      });
+      setIsAddingMyWork(false);
+    }
+  };
+
+  const handleUpdateMyWork = () => {
+    if (editingMyWork) {
+      updateMyWork(editingMyWork.id, editingMyWork);
+      setEditingMyWork(null);
+    }
   };
 
   const handleLogout = () => {
@@ -271,6 +306,17 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
           >
             <Award size={18} />
             Skills
+          </button>
+          <button
+            onClick={() => setActiveTab("myworks")}
+            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-medium transition-colors ${
+              activeTab === "myworks"
+                ? "text-[#00D4FF] border-b-2 border-[#00D4FF]"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            <Palette size={18} />
+            My Works
           </button>
           <button
             onClick={() => setActiveTab("about")}
@@ -617,6 +663,178 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                   <Check size={18} />
                   Save Changes
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* My Works Tab */}
+          {activeTab === "myworks" && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg text-white font-semibold">My Works</h2>
+                <button
+                  onClick={() => setIsAddingMyWork(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-[#00D4FF] text-black rounded-lg hover:bg-[#00B8E6] transition-colors text-sm"
+                >
+                  <Plus size={16} />
+                  Add
+                </button>
+              </div>
+
+              {/* Add My Work Form */}
+              {isAddingMyWork && (
+                <div className="bg-[#1A1A1A] rounded-xl p-6 border border-white/10 space-y-4">
+                  <h3 className="text-white font-semibold">New Work</h3>
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    value={myWorkForm.title}
+                    onChange={(e) => setMyWorkForm({ ...myWorkForm, title: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                  <textarea
+                    placeholder="Description (optional)"
+                    value={myWorkForm.description}
+                    onChange={(e) => setMyWorkForm({ ...myWorkForm, description: e.target.value })}
+                    rows={2}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                      <ImageIcon size={16} />
+                      Image URL
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="https://..."
+                      value={myWorkForm.imageUrl}
+                      onChange={(e) => setMyWorkForm({ ...myWorkForm, imageUrl: e.target.value })}
+                      className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Type</label>
+                    <div className="flex gap-4">
+                      <button
+                        onClick={() => setMyWorkForm({ ...myWorkForm, type: "framing" })}
+                        className={`flex-1 py-2 rounded-lg transition-colors ${
+                          myWorkForm.type === "framing"
+                            ? "bg-[#00D4FF] text-black"
+                            : "bg-[#1A1A1A] text-white hover:bg-[#252525]"
+                        }`}
+                      >
+                        Framing
+                      </button>
+                      <button
+                        onClick={() => setMyWorkForm({ ...myWorkForm, type: "moving" })}
+                        className={`flex-1 py-2 rounded-lg transition-colors ${
+                          myWorkForm.type === "moving"
+                            ? "bg-[#00D4FF] text-black"
+                            : "bg-[#1A1A1A] text-white hover:bg-[#252525]"
+                        }`}
+                      >
+                        Moving
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <button
+                      onClick={handleAddMyWork}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#00D4FF] text-black rounded-lg hover:bg-[#00B8E6] transition-colors"
+                    >
+                      <Check size={16} />
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setIsAddingMyWork(false)}
+                      className="flex-1 px-4 py-2 bg-[#1A1A1A] text-white rounded-lg hover:bg-[#252525] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* My Works List */}
+              <div className="grid grid-cols-1 gap-3">
+                {data.myWorks.map((work) => (
+                  <div key={work.id} className="bg-[#1A1A1A] rounded-xl p-4 border border-white/10">
+                    {editingMyWork?.id === work.id ? (
+                      <div className="space-y-4">
+                        <h3 className="text-white font-semibold">Edit Work</h3>
+                        <input
+                          type="text"
+                          value={editingMyWork.title}
+                          onChange={(e) => setEditingMyWork({ ...editingMyWork, title: e.target.value })}
+                          className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white"
+                        />
+                        <textarea
+                          value={editingMyWork.description}
+                          onChange={(e) => setEditingMyWork({ ...editingMyWork, description: e.target.value })}
+                          rows={2}
+                          className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white"
+                        />
+                        <input
+                          type="text"
+                          value={editingMyWork.imageUrl}
+                          onChange={(e) => setEditingMyWork({ ...editingMyWork, imageUrl: e.target.value })}
+                          className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white"
+                        />
+                        <div className="flex gap-4">
+                          <button
+                            onClick={handleUpdateMyWork}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#00D4FF] text-black rounded-lg"
+                          >
+                            <Check size={16} />
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingMyWork(null)}
+                            className="flex-1 px-4 py-2 bg-[#1A1A1A] text-white rounded-lg"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {work.imageUrl && (
+                            <img
+                              src={work.imageUrl}
+                              alt={work.title}
+                              className="w-12 h-12 rounded-lg object-cover"
+                            />
+                          )}
+                          <div>
+                            <h4 className="text-white font-medium">{work.title}</h4>
+                            <p className="text-xs text-gray-500 capitalize">{work.type} • {work.description || "No description"}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setEditingMyWork(work)}
+                            className="p-2 text-gray-400 hover:text-white transition-colors"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button
+                            onClick={() => deleteMyWork(work.id)}
+                            className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {data.myWorks.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Palette className="mx-auto mb-3" size={32} />
+                    <p>No works yet. Add your first framing or moving picture!</p>
+                  </div>
+                )}
               </div>
             </div>
           )}

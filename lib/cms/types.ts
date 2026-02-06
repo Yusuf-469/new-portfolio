@@ -17,9 +17,19 @@ export interface Skill {
   createdAt: string;
 }
 
+export interface MyWork {
+  id: string;
+  title: string;
+  type: "framing" | "moving";
+  imageUrl: string;
+  description?: string;
+  createdAt: string;
+}
+
 export interface PortfolioData {
   projects: Project[];
   skills: Skill[];
+  myWorks: MyWork[];
   about: {
     bio: string;
     location: string;
@@ -75,6 +85,7 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
     { id: "4", name: "Technical Analysis (TradingView)", category: "Finance", createdAt: new Date().toISOString() },
     { id: "5", name: "Event Coverage & Livestream", category: "Production", createdAt: new Date().toISOString() },
   ],
+  myWorks: [],
   about: {
     bio: "I'm a Web3 content creator and creative producer with hands-on experience working with blockchain and crypto brands through DappRush Studios. Specialized in 3D animations, AI-generated videos, and short-form digital content tailored for crypto marketing, community engagement, and livestream promotion.",
     location: "Dubai, UAE",

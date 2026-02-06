@@ -8,6 +8,7 @@ import AdminPanel from "./AdminPanel";
 
 const navLinks = [
   { href: "#work", label: "Work" },
+  { href: "#myworks", label: "My Works" },
   { href: "#services", label: "Services" },
   { href: "#about", label: "About" },
   { href: "#insights", label: "Insights" },
@@ -61,17 +62,17 @@ export function Navigation() {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#00D4FF] transition-all duration-300 group-hover:w-full" />
                 </a>
               ))}
-              {isAuthenticated && (
-                <button
-                  onClick={() => setIsAdminPanelOpen(true)}
-                  className="text-sm font-medium text-[#00D4FF] hover:text-[#00B8E6] transition-colors duration-300 relative group flex items-center gap-1"
-                  data-cursor-hover
-                >
-                  <Settings size={16} />
-                  Admin
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#00D4FF] transition-all duration-300 group-hover:w-full" />
-                </button>
-              )}
+              {/* Settings/Admin Button - Always visible */}
+              <button
+                onClick={() => setIsAdminPanelOpen(true)}
+                className="text-sm font-medium text-gray-400 hover:text-[#00D4FF] transition-colors duration-300 relative group flex items-center gap-1"
+                data-cursor-hover
+                title="Admin Panel"
+              >
+                <Settings size={16} />
+                <span className="hidden xl:inline">Admin</span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#00D4FF] transition-all duration-300 group-hover:w-full" />
+              </button>
             </div>
 
             <div className="flex items-center gap-4 border-l border-white/10 pl-6">

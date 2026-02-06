@@ -1,4 +1,4 @@
-import { PortfolioData, Project, Skill, CMS_STORAGE_KEY, DEFAULT_PORTFOLIO_DATA } from "./types";
+import { PortfolioData, Project, Skill, MyWork, CMS_STORAGE_KEY, DEFAULT_PORTFOLIO_DATA } from "./types";
 
 export function getPortfolioData(): PortfolioData {
   if (typeof window === "undefined") return DEFAULT_PORTFOLIO_DATA;
@@ -95,6 +95,38 @@ export function updateAbout(updates: Partial<PortfolioData["about"]>): void {
   const data = getPortfolioData();
   data.about = { ...data.about, ...updates };
   savePortfolioData(data);
+}
+
+export function addMyWork(work: Omit<MyWork, "id" | "createdAt">): MyWork {
+  const data = getPortfolioData();
+  const newWork: MyWork = {
+    ...work,
+    id: Date.now().toString(),
+    createdAt: new Date().toISOString(),
+  };
+  data.myWorks.push(newWork);
+  savePortfolioData(data);
+  return newWork;
+}
+
+export function updateMyWork(id: string, updates: Partial<MyWork>): MyWork | null {
+  const data = getPortfolioData();
+  const index = data.myWorks.findIndex((w) => w.id === id);
+  if (index === -1) return null;
+  
+  data.myWorks[index] = { ...data.myWorks[index], ...updates };
+  savePortfolioData(data);
+  return data.myWorks[index];
+}
+
+export function deleteMyWork(id: string): boolean {
+  const data = getPortfolioData();
+  const index = data.myWorks.findIndex((w) => w.id === id);
+  if (index === -1) return false;
+  
+  data.myWorks.splice(index, 1);
+  savePortfolioData(data);
+  return true;
 }
 
 export function resetPortfolioData(): void {

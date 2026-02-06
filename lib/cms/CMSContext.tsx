@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
-import { PortfolioData, Project, Skill, DEFAULT_PORTFOLIO_DATA } from "../cms/types";
+import { PortfolioData, Project, Skill, MyWork, DEFAULT_PORTFOLIO_DATA } from "../cms/types";
 import { 
   getPortfolioData, 
   savePortfolioData, 
@@ -12,6 +12,9 @@ import {
   updateSkill as storageUpdateSkill,
   deleteSkill as storageDeleteSkill,
   updateAbout as storageUpdateAbout,
+  addMyWork as storageAddMyWork,
+  updateMyWork as storageUpdateMyWork,
+  deleteMyWork as storageDeleteMyWork,
 } from "../cms/storage";
 
 interface CMSContextType {
@@ -24,6 +27,9 @@ interface CMSContextType {
   updateSkill: (id: string, updates: Partial<Skill>) => void;
   deleteSkill: (id: string) => void;
   updateAbout: (updates: Partial<PortfolioData["about"]>) => void;
+  addMyWork: (work: Omit<MyWork, "id" | "createdAt">) => void;
+  updateMyWork: (id: string, updates: Partial<MyWork>) => void;
+  deleteMyWork: (id: string) => void;
   refreshData: () => void;
 }
 
@@ -79,6 +85,21 @@ export function CMSProvider({ children }: { children: ReactNode }) {
     refreshData();
   };
 
+  const addMyWork = (work: Omit<MyWork, "id" | "createdAt">) => {
+    storageAddMyWork(work);
+    refreshData();
+  };
+
+  const updateMyWork = (id: string, updates: Partial<MyWork>) => {
+    storageUpdateMyWork(id, updates);
+    refreshData();
+  };
+
+  const deleteMyWork = (id: string) => {
+    storageDeleteMyWork(id);
+    refreshData();
+  };
+
   // Don't render provider content until mounted on client
   if (!isMounted) {
     return (
@@ -93,6 +114,9 @@ export function CMSProvider({ children }: { children: ReactNode }) {
           updateSkill: () => {},
           deleteSkill: () => {},
           updateAbout: () => {},
+          addMyWork: () => {},
+          updateMyWork: () => {},
+          deleteMyWork: () => {},
           refreshData: () => {},
         }}
       >
@@ -113,6 +137,9 @@ export function CMSProvider({ children }: { children: ReactNode }) {
         updateSkill,
         deleteSkill,
         updateAbout,
+        addMyWork,
+        updateMyWork,
+        deleteMyWork,
         refreshData,
       }}
     >

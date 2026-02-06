@@ -6,6 +6,7 @@ import { HeroPanel } from "./components/HeroPanel";
 import { AboutPanel } from "./components/AboutPanel";
 import { ServicesPanel } from "./components/ServicesPanel";
 import { WorkPanel } from "./components/WorkPanel";
+import MyWorksPanel from "./components/MyWorksPanel";
 import { ContactPanel } from "./components/ContactPanel";
 import { useCustomCursor } from "../lib/hooks/useCustomCursor";
 
@@ -19,6 +20,7 @@ export default function Home() {
       <AboutPanel />
       <ServicesPanel />
       <WorkPanel />
+      <MyWorksPanel />
       <ContactPanel />
     </main>
   );
