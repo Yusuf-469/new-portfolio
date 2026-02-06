@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../lib/cms/AuthContext";
 import { Lock, User, ArrowRight } from "lucide-react";
 
+// Force dynamic rendering to avoid SSR issues with localStorage
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
