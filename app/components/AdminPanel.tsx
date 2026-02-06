@@ -14,6 +14,7 @@ import {
   X,
   Image as ImageIcon,
   Check,
+  ArrowLeft,
 } from "lucide-react";
 import { Project, Skill } from "../../lib/cms/types";
 
@@ -147,8 +148,9 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
             <button
               onClick={onClose}
               className="p-2 text-gray-400 hover:text-white transition-colors"
+              title="Back to Profile"
             >
-              <X size={20} />
+              <ArrowLeft size={20} />
             </button>
           </div>
         </div>
