@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../lib/cms/AuthContext";
 import { useCMS } from "../../lib/cms/CMSContext";
-import { useRouter } from "next/navigation";
 import { 
   Plus, 
   Trash2, 
@@ -15,6 +14,8 @@ import {
   Image as ImageIcon,
   Check,
   ArrowLeft,
+  Lock,
+  User,
 } from "lucide-react";
 import { Project, Skill } from "../../lib/cms/types";
 
@@ -26,14 +27,15 @@ interface AdminPanelProps {
 }
 
 export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
-  const { isAuthenticated, logout, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, login, logout, isLoading: authLoading } = useAuth();
   const { data, addProject, updateProject, deleteProject, addSkill, updateSkill, deleteSkill, updateAbout } = useCMS();
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>("projects");
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isAddingSkill, setIsAddingSkill] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
+  const [loginForm, setLoginForm] = useState({ username: "", password: "" });
+  const [loginError, setLoginError] = useState("");
 
   // Form states
   const [projectForm, setProjectForm] = useState({
@@ -58,15 +60,18 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     web3Brands: data.about.web3Brands,
   });
 
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push("/login");
-    }
-  }, [authLoading, isAuthenticated, router]);
-
-  if (!isOpen || !isAuthenticated) {
+  if (!isOpen) {
     return null;
   }
+
+  const handleLogin = () => {
+    if (login(loginForm.username, loginForm.password)) {
+      setLoginForm({ username: "", password: "" });
+      setLoginError("");
+    } else {
+      setLoginError("Invalid credentials");
+    }
+  };
 
   const handleAddProject = () => {
     if (projectForm.name && projectForm.category && projectForm.description) {
@@ -118,8 +123,96 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
   const handleLogout = () => {
     logout();
-    router.push("/");
   };
+
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 z-[100]">
+        {/* Backdrop */}
+        <div 
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          onClick={onClose}
+        />
+        
+        {/* Login Panel */}
+        <div className="absolute right-0 top-0 bottom-0 w-full max-w-md bg-[#0A0A0A] border-l border-white/10 overflow-hidden flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <h1 className="display-text text-2xl font-bold text-white">CMS</h1>
+              <span className="text-xs text-[#00D4FF] px-2 py-1 bg-[#00D4FF]/10 rounded">Admin</span>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 text-gray-400 hover:text-white transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* Login Form */}
+          <div className="flex-1 flex items-center justify-center p-6">
+            <div className="w-full max-w-sm space-y-6">
+              <div className="text-center">
+                <Lock className="mx-auto mb-4 text-[#00D4FF]" size={48} />
+                <h2 className="text-xl text-white font-semibold">Admin Access</h2>
+                <p className="text-sm text-gray-500 mt-2">Enter credentials to manage portfolio</p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Username</label>
+                  <div className="relative">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                    <input
+                      type="text"
+                      value={loginForm.username}
+                      onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
+                      className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                      placeholder="Username"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Password</label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                    <input
+                      type="password"
+                      value={loginForm.password}
+                      onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+                      className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                      placeholder="Password"
+                      onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                    />
+                  </div>
+                </div>
+
+                {loginError && (
+                  <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                    <p className="text-sm text-red-500 text-center">{loginError}</p>
+                  </div>
+                )}
+
+                <button
+                  onClick={handleLogin}
+                  className="w-full bg-[#00D4FF] text-black font-medium py-3 rounded-lg hover:bg-[#00B8E6] transition-colors"
+                >
+                  Sign In
+                </button>
+              </div>
+
+              <p className="text-xs text-gray-500 text-center">
+                Demo: saklain / admin123
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[100]">
