@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, MapPin, Settings } from "lucide-react";
 import { useAuth } from "../../lib/cms/AuthContext";
+import AdminPanel from "./AdminPanel";
 
 const navLinks = [
   { href: "#work", label: "Work" },
@@ -16,6 +17,7 @@ const navLinks = [
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -60,15 +62,15 @@ export function Navigation() {
                 </a>
               ))}
               {isAuthenticated && (
-                <a
-                  href="/admin"
-                  className="text-sm font-medium text-[#00D44FF] hover:text-[#00D4FF] transition-colors duration-300 relative group flex items-center gap-1"
+                <button
+                  onClick={() => setIsAdminPanelOpen(true)}
+                  className="text-sm font-medium text-[#00D4FF] hover:text-[#00B8E6] transition-colors duration-300 relative group flex items-center gap-1"
                   data-cursor-hover
                 >
-                  <Settings size={14} />
-                  CMS
+                  <Settings size={16} />
+                  Admin
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#00D4FF] transition-all duration-300 group-hover:w-full" />
-                </a>
+                </button>
               )}
             </div>
 
@@ -134,17 +136,19 @@ export function Navigation() {
                 </motion.a>
               ))}
               {isAuthenticated && (
-                <motion.a
-                  href="/admin"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                <motion.button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsAdminPanelOpen(true);
+                  }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: navLinks.length * 0.1 }}
                   className="display-text text-4xl font-bold text-[#00D4FF] transition-colors"
                   data-cursor-hover
                 >
-                  CMS
-                </motion.a>
+                  Admin
+                </motion.button>
               )}
             </div>
 
@@ -157,6 +161,9 @@ export function Navigation() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Slide-in Admin Panel */}
+      <AdminPanel isOpen={isAdminPanelOpen} onClose={() => setIsAdminPanelOpen(false)} />
     </>
   );
 }

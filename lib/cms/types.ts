@@ -3,6 +3,7 @@ export interface Project {
   name: string;
   category: string;
   description: string;
+  imageUrl?: string;
   color: string;
   bgGradient: string;
   createdAt: string;

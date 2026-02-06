@@ -19,9 +19,6 @@ import { Project, Skill } from "../../lib/cms/types";
 
 type Tab = "projects" | "skills" | "about";
 
-// Force dynamic rendering to avoid SSR issues with localStorage
-export const dynamic = 'force-dynamic';
-
 interface AdminPanelProps {
   isOpen: boolean;
   onClose: () => void;
