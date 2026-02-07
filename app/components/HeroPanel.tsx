@@ -43,7 +43,7 @@ export function HeroPanel() {
   const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   const [displayText, setDisplayText] = useState("");
-  const fullText = "NOT JUST CONTENT. CULTURE.";
+  const fullText = hero.tagline || "NOT JUST CONTENT. CULTURE.";
   const [isGlitching, setIsGlitching] = useState(true);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export function HeroPanel() {
     }, 30);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fullText]);
 
   return (
     <section ref={containerRef} className="relative min-h-screen pt-20 overflow-hidden">
