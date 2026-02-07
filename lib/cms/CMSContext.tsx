@@ -15,6 +15,8 @@ import {
   addMyWork as storageAddMyWork,
   updateMyWork as storageUpdateMyWork,
   deleteMyWork as storageDeleteMyWork,
+  updateHero as storageUpdateHero,
+  updateContact as storageUpdateContact,
 } from "../cms/storage";
 
 interface CMSContextType {
@@ -30,6 +32,8 @@ interface CMSContextType {
   addMyWork: (work: Omit<MyWork, "id" | "createdAt">) => void;
   updateMyWork: (id: string, updates: Partial<MyWork>) => void;
   deleteMyWork: (id: string) => void;
+  updateHero: (updates: Partial<PortfolioData["hero"]>) => void;
+  updateContact: (updates: Partial<PortfolioData["contact"]>) => void;
   refreshData: () => void;
 }
 
@@ -100,6 +104,16 @@ export function CMSProvider({ children }: { children: ReactNode }) {
     refreshData();
   };
 
+  const updateHero = (updates: Partial<PortfolioData["hero"]>) => {
+    storageUpdateHero(updates);
+    refreshData();
+  };
+
+  const updateContact = (updates: Partial<PortfolioData["contact"]>) => {
+    storageUpdateContact(updates);
+    refreshData();
+  };
+
   // Don't render provider content until mounted on client
   if (!isMounted) {
     return (
@@ -117,6 +131,8 @@ export function CMSProvider({ children }: { children: ReactNode }) {
           addMyWork: () => {},
           updateMyWork: () => {},
           deleteMyWork: () => {},
+          updateHero: () => {},
+          updateContact: () => {},
           refreshData: () => {},
         }}
       >
@@ -140,6 +156,8 @@ export function CMSProvider({ children }: { children: ReactNode }) {
         addMyWork,
         updateMyWork,
         deleteMyWork,
+        updateHero,
+        updateContact,
         refreshData,
       }}
     >

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, FileText } from "lucide-react";
 import { useCMS } from "../../lib/cms/CMSContext";
 
 export function WorkPanel() {
@@ -89,15 +89,29 @@ export function WorkPanel() {
                       </p>
                     </div>
 
-                    {/* CTA Button */}
-                    <div className="mt-8">
-                      <button
-                        className="group/btn inline-flex items-center gap-2 px-6 py-3 border border-white/20 hover:border-white transition-colors"
-                        data-cursor-hover
-                      >
-                        <span className="text-sm font-medium">View Case Study</span>
-                        <ArrowUpRight size={16} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                      </button>
+                    {/* CTA Buttons */}
+                    <div className="mt-8 flex items-center gap-4">
+                      {project.pdfUrl ? (
+                        <a
+                          href={project.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 hover:border-white transition-colors group/btn"
+                          data-cursor-hover
+                          download
+                        >
+                          <FileText size={16} className="group-hover/btn:-translate-y-1 transition-transform" />
+                          <span className="text-sm font-medium">Download Case Study</span>
+                        </a>
+                      ) : (
+                        <button
+                          className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 hover:border-white transition-colors group/btn"
+                          data-cursor-hover
+                        >
+                          <span className="text-sm font-medium">View Case Study</span>
+                          <ArrowUpRight size={16} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                        </button>
+                      )}
                     </div>
                   </div>
 

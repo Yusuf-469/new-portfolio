@@ -97,6 +97,18 @@ export function updateAbout(updates: Partial<PortfolioData["about"]>): void {
   savePortfolioData(data);
 }
 
+export function updateHero(updates: Partial<PortfolioData["hero"]>): void {
+  const data = getPortfolioData();
+  data.hero = { ...data.hero, ...updates };
+  savePortfolioData(data);
+}
+
+export function updateContact(updates: Partial<PortfolioData["contact"]>): void {
+  const data = getPortfolioData();
+  data.contact = { ...data.contact, ...updates };
+  savePortfolioData(data);
+}
+
 export function addMyWork(work: Omit<MyWork, "id" | "createdAt">): MyWork {
   const data = getPortfolioData();
   const newWork: MyWork = {

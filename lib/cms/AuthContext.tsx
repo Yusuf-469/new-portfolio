@@ -3,10 +3,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { AUTH_STORAGE_KEY } from "../cms/types";
 
-// Simple credentials (in production, use proper authentication)
+// Admin credentials
 const ADMIN_CREDENTIALS = {
   username: "saklain",
-  password: "admin123",
+  password: "Creativedirector_01",
 };
 
 interface AuthContextType {

@@ -17,10 +17,15 @@ import {
   Lock,
   User,
   Palette,
+  FileText,
+  Globe,
+  Mail,
+  Phone,
+  MapPin,
 } from "lucide-react";
 import { Project, Skill, MyWork } from "../../lib/cms/types";
 
-type Tab = "projects" | "skills" | "about" | "myworks";
+type Tab = "projects" | "skills" | "myworks" | "hero" | "contact" | "about";
 
 interface AdminPanelProps {
   isOpen: boolean;
@@ -29,7 +34,7 @@ interface AdminPanelProps {
 
 export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
   const { isAuthenticated, login, logout, isLoading: authLoading } = useAuth();
-  const { data, addProject, updateProject, deleteProject, addSkill, updateSkill, deleteSkill, updateAbout, addMyWork, updateMyWork, deleteMyWork } = useCMS();
+  const { data, addProject, updateProject, deleteProject, addSkill, updateSkill, deleteSkill, updateAbout, addMyWork, updateMyWork, deleteMyWork, updateHero, updateContact } = useCMS();
   const [activeTab, setActiveTab] = useState<Tab>("projects");
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isAddingSkill, setIsAddingSkill] = useState(false);
@@ -46,6 +51,7 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     category: "",
     description: "",
     imageUrl: "",
+    pdfUrl: "",
     color: "#00D4FF",
     bgGradient: "from-[#00D4FF]/20 to-transparent",
   });
@@ -55,19 +61,33 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     category: "Creative",
   });
 
+  const [myWorkForm, setMyWorkForm] = useState({
+    title: "",
+    description: "",
+    imageUrl: "",
+    type: "framing" as "framing" | "moving",
+  });
+
+  const [heroForm, setHeroForm] = useState({
+    subtitle: data.hero.subtitle,
+    tagline: data.hero.tagline,
+    title: data.hero.title,
+    description: data.hero.description,
+  });
+
+  const [contactForm, setContactForm] = useState({
+    phone: data.contact.phone,
+    email: data.contact.email,
+    location: data.contact.location,
+    linkedin: data.contact.linkedin,
+  });
+
   const [aboutForm, setAboutForm] = useState({
     bio: data.about.bio,
     location: data.about.location,
     yearsExperience: data.about.yearsExperience,
     projectsCompleted: data.about.projectsCompleted,
     web3Brands: data.about.web3Brands,
-  });
-
-  const [myWorkForm, setMyWorkForm] = useState({
-    title: "",
-    description: "",
-    imageUrl: "",
-    type: "framing" as "framing" | "moving",
   });
 
   if (!isOpen) {
@@ -90,6 +110,7 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
         category: projectForm.category,
         description: projectForm.description,
         imageUrl: projectForm.imageUrl || undefined,
+        pdfUrl: projectForm.pdfUrl || undefined,
         color: projectForm.color,
         bgGradient: projectForm.bgGradient,
       });
@@ -98,6 +119,7 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
         category: "",
         description: "",
         imageUrl: "",
+        pdfUrl: "",
         color: "#00D4FF",
         bgGradient: "from-[#00D4FF]/20 to-transparent",
       });
@@ -238,16 +260,20 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                   Sign In
                 </button>
               </div>
-
-              <p className="text-xs text-gray-500 text-center">
-                Demo: saklain / admin123
-              </p>
             </div>
           </div>
         </div>
       </div>
     );
   }
+
+  const handleUpdateHero = () => {
+    updateHero(heroForm);
+  };
+
+  const handleUpdateContact = () => {
+    updateContact(contactForm);
+  };
 
   return (
     <div className="fixed inset-0 z-[100]">
@@ -284,49 +310,71 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-white/10">
+        <div className="flex border-b border-white/10 overflow-x-auto">
           <button
             onClick={() => setActiveTab("projects")}
-            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-medium transition-colors ${
+            className={`flex items-center justify-center gap-2 py-4 px-4 text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === "projects"
                 ? "text-[#00D4FF] border-b-2 border-[#00D4FF]"
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            <Briefcase size={18} />
+            <Briefcase size={16} />
             Projects
           </button>
           <button
             onClick={() => setActiveTab("skills")}
-            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-medium transition-colors ${
+            className={`flex items-center justify-center gap-2 py-4 px-4 text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === "skills"
                 ? "text-[#00D4FF] border-b-2 border-[#00D4FF]"
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            <Award size={18} />
+            <Award size={16} />
             Skills
           </button>
           <button
             onClick={() => setActiveTab("myworks")}
-            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-medium transition-colors ${
+            className={`flex items-center justify-center gap-2 py-4 px-4 text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === "myworks"
                 ? "text-[#00D4FF] border-b-2 border-[#00D4FF]"
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            <Palette size={18} />
+            <Palette size={16} />
             My Works
           </button>
           <button
+            onClick={() => setActiveTab("hero")}
+            className={`flex items-center justify-center gap-2 py-4 px-4 text-sm font-medium transition-colors whitespace-nowrap ${
+              activeTab === "hero"
+                ? "text-[#00D4FF] border-b-2 border-[#00D4FF]"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            <Globe size={16} />
+            Hero
+          </button>
+          <button
+            onClick={() => setActiveTab("contact")}
+            className={`flex items-center justify-center gap-2 py-4 px-4 text-sm font-medium transition-colors whitespace-nowrap ${
+              activeTab === "contact"
+                ? "text-[#00D4FF] border-b-2 border-[#00D4FF]"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            <Mail size={16} />
+            Contact
+          </button>
+          <button
             onClick={() => setActiveTab("about")}
-            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-medium transition-colors ${
+            className={`flex items-center justify-center gap-2 py-4 px-4 text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === "about"
                 ? "text-[#00D4FF] border-b-2 border-[#00D4FF]"
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            <Edit2 size={18} />
+            <Edit2 size={16} />
             About
           </button>
         </div>
@@ -835,6 +883,122 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                     <p>No works yet. Add your first framing or moving picture!</p>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Hero Tab */}
+          {activeTab === "hero" && (
+            <div className="space-y-6">
+              <h2 className="text-lg text-white font-semibold">Hero Section</h2>
+              <div className="bg-[#1A1A1A] rounded-xl p-6 border border-white/10 space-y-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Subtitle</label>
+                  <input
+                    type="text"
+                    value={heroForm.subtitle}
+                    onChange={(e) => setHeroForm({ ...heroForm, subtitle: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Tagline</label>
+                  <input
+                    type="text"
+                    value={heroForm.tagline}
+                    onChange={(e) => setHeroForm({ ...heroForm, tagline: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Title</label>
+                  <input
+                    type="text"
+                    value={heroForm.title}
+                    onChange={(e) => setHeroForm({ ...heroForm, title: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Description</label>
+                  <input
+                    type="text"
+                    value={heroForm.description}
+                    onChange={(e) => setHeroForm({ ...heroForm, description: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
+                <button
+                  onClick={handleUpdateHero}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#00D4FF] text-black rounded-lg hover:bg-[#00B8E6] transition-colors"
+                >
+                  <Check size={18} />
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Contact Tab */}
+          {activeTab === "contact" && (
+            <div className="space-y-6">
+              <h2 className="text-lg text-white font-semibold">Contact Section</h2>
+              <div className="bg-[#1A1A1A] rounded-xl p-6 border border-white/10 space-y-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <Phone size={16} />
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.phone}
+                    onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <Mail size={16} />
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.email}
+                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <MapPin size={16} />
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.location}
+                    onChange={(e) => setContactForm({ ...contactForm, location: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <Globe size={16} />
+                    LinkedIn
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.linkedin}
+                    onChange={(e) => setContactForm({ ...contactForm, linkedin: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
+                <button
+                  onClick={handleUpdateContact}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#00D4FF] text-black rounded-lg hover:bg-[#00B8E6] transition-colors"
+                >
+                  <Check size={18} />
+                  Save Changes
+                </button>
               </div>
             </div>
           )}

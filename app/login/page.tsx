@@ -121,13 +121,6 @@ export default function LoginPage() {
             ← Back to Portfolio
           </a>
         </div>
-
-        {/* Demo Credentials Info */}
-        <div className="mt-8 p-4 bg-white/5 rounded-lg border border-white/10">
-          <p className="text-xs text-gray-500 text-center">
-            Demo credentials: saklain / admin123
-          </p>
-        </div>
       </div>
     </div>
   );

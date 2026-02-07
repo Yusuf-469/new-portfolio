@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import { useCMS } from "../../lib/cms/CMSContext";
 
 const credentials = [
   "CFA LEVEL 1 CANDIDATE",
@@ -27,6 +28,9 @@ const marqueeItems = [
 ];
 
 export function HeroPanel() {
+  const { data } = useCMS();
+  const hero = data.hero;
+  const contact = data.contact;
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -118,7 +122,7 @@ export function HeroPanel() {
               transition={{ delay: 1 }}
             >
               <span className="w-2 h-2 bg-[#00D4FF] rounded-full animate-pulse" />
-              <span className="text-sm font-medium">Based in Dubai</span>
+              <span className="text-sm font-medium">{contact.location || "Based in Dubai"}</span>
             </motion.div>
           </motion.div>
 
@@ -133,7 +137,7 @@ export function HeroPanel() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              WEB3 CONTENT CREATOR & CREATIVE PRODUCER
+              {hero.subtitle || "WEB3 CONTENT CREATOR & CREATIVE PRODUCER"}
             </motion.p>
 
             <motion.h1
@@ -142,7 +146,7 @@ export function HeroPanel() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <span className="block text-white">{displayText}</span>
+              <span className="block text-white">{hero.title || displayText}</span>
             </motion.h1>
 
             <motion.p
@@ -151,8 +155,7 @@ export function HeroPanel() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              Md Saklain Jawed. CFA L1 • CMT L2 • FRM L1. Creating 3D animations,
-              AI-generated videos, and crypto-native content for Web3 brands.
+              {hero.description || "Creating 3D animations, AI-generated videos, and crypto-native content for Web3 brands."}
             </motion.p>
 
             <motion.div

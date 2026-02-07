@@ -4,6 +4,7 @@ export interface Project {
   category: string;
   description: string;
   imageUrl?: string;
+  pdfUrl?: string;
   color: string;
   bgGradient: string;
   createdAt: string;
@@ -30,6 +31,18 @@ export interface PortfolioData {
   projects: Project[];
   skills: Skill[];
   myWorks: MyWork[];
+  hero: {
+    subtitle: string;
+    tagline: string;
+    title: string;
+    description: string;
+  };
+  contact: {
+    phone: string;
+    email: string;
+    location: string;
+    linkedin: string;
+  };
   about: {
     bio: string;
     location: string;
@@ -86,8 +99,20 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
     { id: "5", name: "Event Coverage & Livestream", category: "Production", createdAt: new Date().toISOString() },
   ],
   myWorks: [],
+  hero: {
+    subtitle: "WEB3 CONTENT CREATOR & CREATIVE PRODUCER",
+    tagline: "NOT JUST CONTENT. CULTURE.",
+    title: "Md Saklain Jawed",
+    description: "CFA L1 • CMT L2 • FRM L1",
+  },
+  contact: {
+    phone: "+971 58 885 3410",
+    email: "saklainjawed.fundmanager@gmail.com",
+    location: "Dubai, United Arab Emirates",
+    linkedin: "linkedin.com/in/md-saklain-jawed",
+  },
   about: {
-    bio: "I'm a Web3 content creator and creative producer with hands-on experience working with blockchain and crypto brands through DappRush Studios. Specialized in 3D animations, AI-generated videos, and short-form digital content tailored for crypto marketing, community engagement, and livestream promotion.",
+    bio: "Creating 3D animations, AI-generated videos, and crypto-native content for Web3 brands. Bridging finance expertise with creative execution for Web3 brands.",
     location: "Dubai, UAE",
     yearsExperience: "3+",
     projectsCompleted: "50+",

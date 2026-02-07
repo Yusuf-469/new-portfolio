@@ -6,6 +6,7 @@ import {
   Phone, Mail, MapPin, Linkedin, Instagram, 
   Twitter, Send, ArrowRight
 } from "lucide-react";
+import { useCMS } from "../../lib/cms/CMSContext";
 
 // Magnetic Button Component
 function MagneticButton({ children, type = "button", className = "" }: { children: React.ReactNode; type?: "button" | "submit" | "reset"; className?: string }) {
@@ -77,6 +78,8 @@ const articles = [
 ];
 
 export function ContactPanel() {
+  const { data } = useCMS();
+  const contact = data.contact;
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -183,20 +186,20 @@ export function ContactPanel() {
               >
                 <div className="flex items-center gap-4 text-gray-400">
                   <Phone size={18} className="text-[#00D4FF]" />
-                  <span>+971 58 885 3410</span>
+                  <span>{contact.phone || "+971 58 885 3410"}</span>
                 </div>
                 <div className="flex items-center gap-4 text-gray-400">
                   <Mail size={18} className="text-[#00D4FF]" />
-                  <span>saklainjawed.fundmanager@gmail.com</span>
+                  <span>{contact.email || "saklainjawed.fundmanager@gmail.com"}</span>
                 </div>
                 <div className="flex items-center gap-4 text-gray-400">
                   <MapPin size={18} className="text-[#00D4FF]" />
-                  <span>Dubai, United Arab Emirates</span>
+                  <span>{contact.location || "Dubai, United Arab Emirates"}</span>
                 </div>
                 <div className="flex items-center gap-4 text-gray-400">
                   <Linkedin size={18} className="text-[#00D4FF]" />
-                  <a href="#" className="hover:text-white transition-colors">
-                    linkedin.com/in/md-saklain-jawed
+                  <a href={contact.linkedin ? `https://${contact.linkedin}` : "#"} className="hover:text-white transition-colors">
+                    {contact.linkedin || "linkedin.com/in/md-saklain-jawed"}
                   </a>
                 </div>
               </motion.div>
