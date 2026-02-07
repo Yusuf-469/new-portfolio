@@ -68,7 +68,7 @@ export function AboutPanel() {
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              Bridging finance expertise with creative execution for Web3 brands.
+              {about.headline || "Bridging finance expertise with creative execution for Web3 brands."}
             </motion.h2>
 
             <motion.p

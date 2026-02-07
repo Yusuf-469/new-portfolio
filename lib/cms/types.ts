@@ -44,6 +44,7 @@ export interface PortfolioData {
     linkedin: string;
   };
   about: {
+    headline: string;
     bio: string;
     location: string;
     yearsExperience: string;
@@ -112,7 +113,8 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
     linkedin: "linkedin.com/in/md-saklain-jawed",
   },
   about: {
-    bio: "Creating 3D animations, AI-generated videos, and crypto-native content for Web3 brands. Bridging finance expertise with creative execution for Web3 brands.",
+    headline: "Bridging finance expertise with creative execution for Web3 brands.",
+    bio: "Creating 3D animations, AI-generated videos, and crypto-native content for Web3 brands.",
     location: "Dubai, UAE",
     yearsExperience: "3+",
     projectsCompleted: "50+",

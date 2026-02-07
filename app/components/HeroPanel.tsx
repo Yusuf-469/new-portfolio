@@ -141,13 +141,25 @@ export function HeroPanel() {
             </motion.p>
 
             <motion.h1
-              className="display-text text-5xl lg:text-7xl xl:text-8xl leading-none mb-8"
+              className="display-text text-5xl lg:text-7xl xl:text-8xl leading-none mb-4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <span className="block text-white">{hero.title || displayText}</span>
+              <span className="block text-white">Md Saklain Jawed</span>
             </motion.h1>
+
+            {/* Animated Tagline */}
+            <motion.div
+              className="overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <h2 className="text-2xl lg:text-4xl font-display text-white/80">
+                {displayText}
+              </h2>
+            </motion.div>
 
             <motion.p
               className="text-lg text-gray-400 max-w-xl mb-8 leading-relaxed"

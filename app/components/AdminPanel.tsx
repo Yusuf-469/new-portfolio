@@ -83,6 +83,7 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
   });
 
   const [aboutForm, setAboutForm] = useState({
+    headline: data.about.headline,
     bio: data.about.bio,
     location: data.about.location,
     yearsExperience: data.about.yearsExperience,
@@ -657,6 +658,15 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
             <div className="space-y-6">
               <h2 className="text-lg text-white font-semibold">About Section</h2>
               <div className="bg-[#1A1A1A] rounded-xl p-6 border border-white/10 space-y-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Headline</label>
+                  <input
+                    type="text"
+                    value={aboutForm.headline}
+                    onChange={(e) => setAboutForm({ ...aboutForm, headline: e.target.value })}
+                    className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4FF]"
+                  />
+                </div>
                 <div>
                   <label className="block text-sm text-gray-400 mb-2">Bio</label>
                   <textarea
