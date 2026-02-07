@@ -1,12 +1,41 @@
 import { PortfolioData, Project, Skill, MyWork, CMS_STORAGE_KEY, DEFAULT_PORTFOLIO_DATA } from "./types";
 
+function mergeWithDefaults(storedData: Partial<PortfolioData>): PortfolioData {
+  return {
+    projects: storedData.projects || DEFAULT_PORTFOLIO_DATA.projects,
+    skills: storedData.skills || DEFAULT_PORTFOLIO_DATA.skills,
+    myWorks: storedData.myWorks || DEFAULT_PORTFOLIO_DATA.myWorks,
+    hero: {
+      subtitle: storedData.hero?.subtitle ?? DEFAULT_PORTFOLIO_DATA.hero.subtitle,
+      tagline: storedData.hero?.tagline ?? DEFAULT_PORTFOLIO_DATA.hero.tagline,
+      title: storedData.hero?.title ?? DEFAULT_PORTFOLIO_DATA.hero.title,
+      description: storedData.hero?.description ?? DEFAULT_PORTFOLIO_DATA.hero.description,
+    },
+    contact: {
+      phone: storedData.contact?.phone ?? DEFAULT_PORTFOLIO_DATA.contact.phone,
+      email: storedData.contact?.email ?? DEFAULT_PORTFOLIO_DATA.contact.email,
+      location: storedData.contact?.location ?? DEFAULT_PORTFOLIO_DATA.contact.location,
+      linkedin: storedData.contact?.linkedin ?? DEFAULT_PORTFOLIO_DATA.contact.linkedin,
+    },
+    about: {
+      headline: storedData.about?.headline ?? DEFAULT_PORTFOLIO_DATA.about.headline,
+      bio: storedData.about?.bio ?? DEFAULT_PORTFOLIO_DATA.about.bio,
+      location: storedData.about?.location ?? DEFAULT_PORTFOLIO_DATA.about.location,
+      yearsExperience: storedData.about?.yearsExperience ?? DEFAULT_PORTFOLIO_DATA.about.yearsExperience,
+      projectsCompleted: storedData.about?.projectsCompleted ?? DEFAULT_PORTFOLIO_DATA.about.projectsCompleted,
+      web3Brands: storedData.about?.web3Brands ?? DEFAULT_PORTFOLIO_DATA.about.web3Brands,
+    },
+  };
+}
+
 export function getPortfolioData(): PortfolioData {
   if (typeof window === "undefined") return DEFAULT_PORTFOLIO_DATA;
   
   try {
     const stored = localStorage.getItem(CMS_STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      return mergeWithDefaults(parsed);
     }
     // Initialize with default data
     localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(DEFAULT_PORTFOLIO_DATA));
